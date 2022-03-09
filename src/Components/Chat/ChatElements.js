@@ -31,4 +31,9 @@ export const ChatInput = styled.input`
   height: 30px;
   outline: none;
 `;
+export const MessageBox = styled.div`
+  display: flex;
+  justify-content: ${(props) =>
+    props.user == props.currentUser ? "flex-end" : "flex-start"};
+`;
 export const SendIcon = styled(Send)``;

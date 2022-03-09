@@ -92,14 +92,11 @@ function App() {
           console.log(sessionStorage.getItem("currentChat"));
           if (
             JSON.parse(sessionStorage.getItem("currentChat")).transmitter ==
-              currentUser.id &&
+              chatToUpdate[0].transmitter &&
             JSON.parse(sessionStorage.getItem("currentChat")).receiver ==
-              currentUserMessages[currentUserMessages.length - 1].transmitter
+              chatToUpdate[0].receiver
           ) {
-            if (
-              currentUserMessages[currentUserMessages.length - 1].messages
-                .length > 0
-            ) {
+            if (chatToUpdate[0].messages.length > 0) {
               console.log(currentChat);
               dispatch(receiveMessage(chatToUpdate[0].messages));
             }

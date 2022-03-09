@@ -12,6 +12,7 @@ import {
   ChatHeader,
   ChatInput,
   ChatMessages,
+  MessageBox,
   SendIcon,
 } from "./ChatElements";
 
@@ -34,7 +35,15 @@ function Chat({ chatName }) {
     console.log(chats);
   };
   const sendNewMessage = () => {
-    dispatch(sendMessage(currentChat, { message: message, state: "enviado" }));
+    console.log(JSON.parse(sessionStorage.getItem("currentChat")));
+    console.log(currentChat);
+    dispatch(
+      sendMessage(currentChat, {
+        message: message,
+        user: currentChat.transmitter,
+      })
+    );
+    console.log(currentChat);
   };
   useEffect(() => {
     // if (JSON.parse(localStorage.getItem("chats"))) {
@@ -59,37 +68,77 @@ function Chat({ chatName }) {
     //   }
     // }
 
-    if (
-      startMessage ||
-      (JSON.parse(localStorage.getItem("chats"))[
-        JSON.parse(localStorage.getItem("chats")).length - 2
-      ].transmitter == currentChat.transmitter &&
-        JSON.parse(localStorage.getItem("chats"))[
-          JSON.parse(localStorage.getItem("chats")).length - 2
-        ].receiver == currentChat.receiver)
-    ) {
-      if (JSON.parse(localStorage.getItem("chats"))) {
-        console.log("si esta entrando");
-        dispatch(
-          updateChat(JSON.parse(localStorage.getItem("chats")), currentChat)
-        );
-      } else {
-        dispatch(updateChat([], currentChat));
-      }
+    // if (
+    //   startMessage ||
+    //   (JSON.parse(localStorage.getItem("chats"))[
+    //     JSON.parse(localStorage.getItem("chats")).length - 2
+    //   ].transmitter == currentChat.transmitter &&
+    //     JSON.parse(localStorage.getItem("chats"))[
+    //       JSON.parse(localStorage.getItem("chats")).length - 2
+    //     ].receiver == currentChat.receiver)
+    // ) {
+    //   if (JSON.parse(localStorage.getItem("chats"))) {
+    //     console.log("si esta entrando");
+    //     dispatch(
+    //       updateChat(JSON.parse(localStorage.getItem("chats")), currentChat)
+    //     );
+    //   } else {
+    //     dispatch(updateChat([], currentChat));
+    //   }
+    // } else {
+    //   console.log("se actualiza");
+    //   if (JSON.parse(localStorage.getItem("chats"))) {
+    //     console.log("si esta entrando");
+    //     dispatch(
+    //       updateChat(JSON.parse(localStorage.getItem("chats")), currentChat)
+    //     );
+    //   } else {
+    //     dispatch(updateChat([], currentChat));
+    //   }
+    //   const chats = JSON.parse(localStorage.getItem("chats"));
+    //   console.log(chats);
+    // }
+    // setStartMessage(false);
+    // console.log(JSON.parse(sessionStorage.getItem("currentChat")));
+    // if (JSON.parse(localStorage.getItem("chats"))) {
+    //   console.log("si esta entrando");
+    //   dispatch(
+    //     updateChat(JSON.parse(localStorage.getItem("chats")), currentChat)
+    //   );
+    // } else {
+    //   dispatch(updateChat([], currentChat));
+    // }
+    // if (startMessage) {
+    //   if (JSON.parse(localStorage.getItem("chats"))) {
+    //     console.log("si esta entrando");
+    //     dispatch(
+    //       bringMessages(JSON.parse(localStorage.getItem("chats")), currentChat)
+    //     );
+    //   } else {
+    //     dispatch(bringMessages([], currentChat));
+    //   }
+    // } else {
+    //   console.log("se actualiza");
+    //   if (JSON.parse(localStorage.getItem("chats"))) {
+    //     console.log("si esta entrando");
+    //     dispatch(
+    //       updateChat(JSON.parse(localStorage.getItem("chats")), currentChat)
+    //     );
+    //   } else {
+    //     dispatch(updateChat([], currentChat));
+    //   }
+    //   const chats = JSON.parse(localStorage.getItem("chats"));
+    //   console.log(chats);
+    // }
+    // setStartMessage(false);
+    if (JSON.parse(localStorage.getItem("chats"))) {
+      console.log("si esta entrando");
+      dispatch(
+        updateChat(JSON.parse(localStorage.getItem("chats")), currentChat)
+      );
     } else {
-      console.log("se actualiza");
-      if (JSON.parse(localStorage.getItem("chats"))) {
-        console.log("si esta entrando");
-        dispatch(
-          updateChat(JSON.parse(localStorage.getItem("chats")), currentChat)
-        );
-      } else {
-        dispatch(updateChat([], currentChat));
-      }
-      const chats = JSON.parse(localStorage.getItem("chats"));
-      console.log(chats);
+      dispatch(updateChat([], currentChat));
     }
-    setStartMessage(false);
   }, [messages.length]);
   return (
     <ChatContainer>
@@ -99,7 +148,13 @@ function Chat({ chatName }) {
       <ChatMessages>
         {messages &&
           messages.map((message, index) => (
-            <div key={index}>{message.message}</div>
+            <MessageBox
+              key={index}
+              user={message ? message.user : 0}
+              currentUser={currentChat.transmitter}
+            >
+              {message.message}
+            </MessageBox>
           ))}
       </ChatMessages>
       <ChatFooter>

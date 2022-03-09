@@ -52,7 +52,8 @@ function Sidebar({ userList }) {
       console.log(receiverId);
       console.log("Existe");
       currentChats.map((chat) => {
-        if (chat.receiver == receiverId) {
+        console.log(chat);
+        if (chat.transmitter == transmitterId && chat.receiver == receiverId) {
           console.log("coincidio");
           dispatch(
             startNewChat(
