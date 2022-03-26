@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   bringMessages,
   sendMessage,
   updateChat,
+  updateGroupChat,
 } from "../../actions/chatActions";
 import { addChat, startNewChat } from "../../actions/chatActions";
 import {
@@ -12,6 +13,7 @@ import {
   ChatHeader,
   ChatInput,
   ChatMessages,
+  Message,
   MessageBox,
   SendIcon,
 } from "./ChatElements";
@@ -19,126 +21,59 @@ import {
 function Chat({ chatName }) {
   const currentChat = useSelector((state) => state.currentChat);
   sessionStorage.setItem("currentChat", JSON.stringify(currentChat));
+  const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
   const dispatch = useDispatch();
   const { messages } = useSelector((state) => state.currentChat);
-  const allChat = useSelector((state) => state.allChats);
-  console.log(allChat);
   console.log(currentChat);
   const [message, setMessage] = useState("");
-  const [startMessage, setStartMessage] = useState(true);
 
+  const messagesEndRef = useRef(null);
   console.log(messages);
   const handleChangeInput = (e) => {
     setMessage(e.target.value);
   };
-  const updateMessages = (chats) => {
-    console.log(chats);
+  const handleKeyInput = (e) => {
+    console.log(e.which || e.keyCode);
+    const codigo = e.which || e.keyCode;
+    console.log(codigo);
+    if (codigo === 13 && !e.shiftKey) {
+      e.preventDefault();
+      sendNewMessage();
+      console.log("Se presiono el enter");
+    }
   };
   const sendNewMessage = () => {
     console.log(JSON.parse(sessionStorage.getItem("currentChat")));
     console.log(currentChat);
+
     dispatch(
       sendMessage(currentChat, {
         message: message,
-        user: currentChat.transmitter,
+        user: currentUser.id,
       })
     );
     console.log(currentChat);
   };
   useEffect(() => {
-    // if (JSON.parse(localStorage.getItem("chats"))) {
-    //   if (
-    //     !(
-    //       JSON.parse(localStorage.getItem("chats"))[
-    //         JSON.parse(localStorage.getItem("chats")).length - 2
-    //       ].transmitter == currentChat.transmitter &&
-    //       JSON.parse(localStorage.getItem("chats"))[
-    //         JSON.parse(localStorage.getItem("chats")).length - 2
-    //       ].receiver == currentChat.receiver
-    //     )
-    //   ) {
-    //     console.log(JSON.parse(localStorage.getItem("chats")));
-    //     console.log(currentChat);
-    //     console.log("entro aqui :v xddddddddd");
-    //   } else {
-    //     console.log("Ahora esta aqui :'VVVVVV");
-    //     dispatch(
-    //       bringMessages(JSON.parse(localStorage.getItem("chats")), currentChat)
-    //     );
-    //   }
-    // }
-
-    // if (
-    //   startMessage ||
-    //   (JSON.parse(localStorage.getItem("chats"))[
-    //     JSON.parse(localStorage.getItem("chats")).length - 2
-    //   ].transmitter == currentChat.transmitter &&
-    //     JSON.parse(localStorage.getItem("chats"))[
-    //       JSON.parse(localStorage.getItem("chats")).length - 2
-    //     ].receiver == currentChat.receiver)
-    // ) {
-    //   if (JSON.parse(localStorage.getItem("chats"))) {
-    //     console.log("si esta entrando");
-    //     dispatch(
-    //       updateChat(JSON.parse(localStorage.getItem("chats")), currentChat)
-    //     );
-    //   } else {
-    //     dispatch(updateChat([], currentChat));
-    //   }
-    // } else {
-    //   console.log("se actualiza");
-    //   if (JSON.parse(localStorage.getItem("chats"))) {
-    //     console.log("si esta entrando");
-    //     dispatch(
-    //       updateChat(JSON.parse(localStorage.getItem("chats")), currentChat)
-    //     );
-    //   } else {
-    //     dispatch(updateChat([], currentChat));
-    //   }
-    //   const chats = JSON.parse(localStorage.getItem("chats"));
-    //   console.log(chats);
-    // }
-    // setStartMessage(false);
-    // console.log(JSON.parse(sessionStorage.getItem("currentChat")));
-    // if (JSON.parse(localStorage.getItem("chats"))) {
-    //   console.log("si esta entrando");
-    //   dispatch(
-    //     updateChat(JSON.parse(localStorage.getItem("chats")), currentChat)
-    //   );
-    // } else {
-    //   dispatch(updateChat([], currentChat));
-    // }
-    // if (startMessage) {
-    //   if (JSON.parse(localStorage.getItem("chats"))) {
-    //     console.log("si esta entrando");
-    //     dispatch(
-    //       bringMessages(JSON.parse(localStorage.getItem("chats")), currentChat)
-    //     );
-    //   } else {
-    //     dispatch(bringMessages([], currentChat));
-    //   }
-    // } else {
-    //   console.log("se actualiza");
-    //   if (JSON.parse(localStorage.getItem("chats"))) {
-    //     console.log("si esta entrando");
-    //     dispatch(
-    //       updateChat(JSON.parse(localStorage.getItem("chats")), currentChat)
-    //     );
-    //   } else {
-    //     dispatch(updateChat([], currentChat));
-    //   }
-    //   const chats = JSON.parse(localStorage.getItem("chats"));
-    //   console.log(chats);
-    // }
-    // setStartMessage(false);
-    if (JSON.parse(localStorage.getItem("chats"))) {
-      console.log("si esta entrando");
+    if (currentChat.id) {
       dispatch(
-        updateChat(JSON.parse(localStorage.getItem("chats")), currentChat)
+        updateGroupChat(
+          JSON.parse(localStorage.getItem("groupChats")),
+          currentChat
+        )
       );
     } else {
-      dispatch(updateChat([], currentChat));
+      if (JSON.parse(localStorage.getItem("chats"))) {
+        console.log("si esta entrando");
+        dispatch(
+          updateChat(JSON.parse(localStorage.getItem("chats")), currentChat)
+        );
+      } else {
+        dispatch(updateChat([], currentChat));
+      }
     }
+
+    messagesEndRef.current?.scrollIntoView();
   }, [messages.length]);
   return (
     <ChatContainer>
@@ -153,12 +88,21 @@ function Chat({ chatName }) {
               user={message ? message.user : 0}
               currentUser={currentChat.transmitter}
             >
-              {message.message}
+              <Message
+                user={message ? message.user : 0}
+                currentUser={currentChat.transmitter}
+              >
+                {message.message}
+              </Message>
             </MessageBox>
           ))}
+        <div ref={messagesEndRef}></div>
       </ChatMessages>
       <ChatFooter>
-        <ChatInput onChange={(e) => handleChangeInput(e)} />
+        <ChatInput
+          onChange={(e) => handleChangeInput(e)}
+          onKeyPress={handleKeyInput}
+        />
         <SendIcon onClick={() => sendNewMessage()} />
       </ChatFooter>
     </ChatContainer>
