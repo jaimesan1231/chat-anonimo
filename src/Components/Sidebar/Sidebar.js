@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Users,
   SidebarContainer,
@@ -12,21 +12,27 @@ import {
   GroupChats,
   ButtonContainer,
   AddChatButton,
+  ChatListItem,
+  UsersButton,
+  GroupsButton,
+  SwitchButton,
 } from "./SidebarElements";
 import PersonIcon from "@mui/icons-material/Person";
 import { startNewChat, startNewGroupChat } from "../../actions/chatActions";
 import FormAddChat from "../FormAddChat/FormAddChat";
 
 function Sidebar({ userList }) {
+  const currentChat = useSelector((state) => state.currentChat);
   const dispatch = useDispatch();
   const [chatList, setChatList] = useState([]);
   const [sidebarState, setSidebarState] = useState("users");
-  const [modal, setModal] = useState(true);
+  const [modal, setModal] = useState(false);
 
   const users = JSON.parse(localStorage.getItem("users"));
-  const groupChats = JSON.parse(localStorage.getItem("groupChats"));
+  const groupChatList = JSON.parse(localStorage.getItem("groupChatList"));
   const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
   const activeChats = JSON.parse(sessionStorage.getItem("activeChats"));
+
   console.log(currentUser);
   useEffect(() => {
     if (userList != null && currentUser != null) {
@@ -47,44 +53,51 @@ function Sidebar({ userList }) {
     }
   }, [userList]);
   const startChat = (transmitterId, receiverId, chatName) => {
-    const currentChats = [];
-    const allChats = JSON.parse(localStorage.getItem("chats"));
-    if (allChats) {
-      console.log("Si hay");
+    if (receiverId !== currentChat.receiver) {
+      console.log(currentChat.transmitter);
+      console.log(transmitterId);
+      const currentChats = [];
+      const allChats = JSON.parse(localStorage.getItem("chats"));
+      if (allChats) {
+        console.log("Si hay");
+        console.log(allChats);
+        currentChats.push(...allChats);
+      }
       console.log(allChats);
-      currentChats.push(...allChats);
-    }
-    console.log(allChats);
-    const chatIds = currentChats.map((chat) => {
-      return { transmitterId: chat.transmitter, receiverId: chat.receiver };
-    });
-    console.log(chatIds);
-    console.log(receiverId);
-    if (
-      chatIds.filter(
-        (chat) =>
-          chat.transmitterId == transmitterId && chat.receiverId == receiverId
-      ).length > 0
-    ) {
-      console.log(receiverId);
-      console.log("Existe");
-      currentChats.map((chat) => {
-        console.log(chat);
-        if (chat.transmitter == transmitterId && chat.receiver == receiverId) {
-          console.log("coincidio");
-          dispatch(
-            startNewChat(
-              chat.transmitter,
-              chat.receiver,
-              chat.chatName,
-              chat.messages
-            )
-          );
-        }
+      const chatIds = currentChats.map((chat) => {
+        return { transmitterId: chat.transmitter, receiverId: chat.receiver };
       });
-    } else {
-      console.log("No coincide");
-      dispatch(startNewChat(transmitterId, receiverId, chatName));
+      console.log(chatIds);
+      console.log(receiverId);
+      if (
+        chatIds.filter(
+          (chat) =>
+            chat.transmitterId == transmitterId && chat.receiverId == receiverId
+        ).length > 0
+      ) {
+        console.log(receiverId);
+        console.log("Existe");
+        currentChats.map((chat) => {
+          console.log(chat);
+          if (
+            chat.transmitter == transmitterId &&
+            chat.receiver == receiverId
+          ) {
+            console.log("coincidio");
+            dispatch(
+              startNewChat(
+                chat.transmitter,
+                chat.receiver,
+                chat.chatName,
+                chat.messages
+              )
+            );
+          }
+        });
+      } else {
+        console.log("No coincide");
+        dispatch(startNewChat(transmitterId, receiverId, chatName));
+      }
     }
   };
   const startGroupChat = (chatId) => {
@@ -92,8 +105,21 @@ function Sidebar({ userList }) {
     const currentChat = groupChats.filter((item) => item.id == chatId)[0];
     console.log(currentChat);
     dispatch(
-      startNewGroupChat(currentChat.id, currentChat.category, currentChat.name)
+      startNewGroupChat(
+        currentChat.id,
+        currentChat.category,
+        currentChat.chatName,
+        currentChat.messages
+      )
     );
+  };
+  const addGroupChat = (newGroupChat) => {
+    groupChatList
+      ? localStorage.setItem(
+          "groupChatList",
+          JSON.stringify([...groupChatList, newGroupChat])
+        )
+      : localStorage.setItem("groupChatList", JSON.stringify([newGroupChat]));
   };
   const setGroupSidebar = () => {
     setSidebarState("groups");
@@ -109,11 +135,20 @@ function Sidebar({ userList }) {
     <SidebarContainer>
       <StyledModal
         open={modal}
-        children={<FormAddChat handleClose={handleClose} />}
+        children={
+          <FormAddChat handleClose={handleClose} addGroupChat={addGroupChat} />
+        }
       ></StyledModal>
       <SidebarSwitch>
-        <div onClick={setUserSidebar}>Usuarios</div>
-        <div onClick={setGroupSidebar}>Grupos</div>
+        <SwitchButton onClick={setUserSidebar} active={sidebarState == "users"}>
+          Usuarios
+        </SwitchButton>
+        <SwitchButton
+          onClick={setGroupSidebar}
+          active={sidebarState == "groups"}
+        >
+          Grupos
+        </SwitchButton>
       </SidebarSwitch>
       {sidebarState == "users" ? (
         <>
@@ -122,7 +157,7 @@ function Sidebar({ userList }) {
             {activeChats &&
               activeChats.map((user) => (
                 <ChatList>
-                  <li
+                  <ChatListItem
                     key={user.id}
                     onClick={() =>
                       startChat(currentUser.id, user.receiver, user.name)
@@ -130,7 +165,7 @@ function Sidebar({ userList }) {
                   >
                     <PersonIcon />
                     {user.chatName}
-                  </li>
+                  </ChatListItem>
                 </ChatList>
               ))}
           </ActiveChats>
@@ -139,7 +174,8 @@ function Sidebar({ userList }) {
             <ChatList>
               {users != null &&
                 chatList.map((user) => (
-                  <li
+                  <ChatListItem
+                    active={user.id == currentChat.receiver ? true : false}
                     key={user.id}
                     onClick={() =>
                       startChat(currentUser.id, user.id, user.name)
@@ -147,7 +183,7 @@ function Sidebar({ userList }) {
                   >
                     <PersonIcon />
                     {user.name}
-                  </li>
+                  </ChatListItem>
                 ))}
             </ChatList>
           </Users>
@@ -156,10 +192,10 @@ function Sidebar({ userList }) {
         <>
           <GroupChats>
             <GroupChatList>
-              {groupChats !== null &&
-                groupChats.map((chat) => (
+              {groupChatList !== null &&
+                groupChatList.map((chat) => (
                   <li key={chat.id} onClick={() => startGroupChat(chat.id)}>
-                    {chat.name} <span>{chat.category}</span>
+                    {chat.chatName} <span>{chat.category}</span>
                   </li>
                 ))}
             </GroupChatList>

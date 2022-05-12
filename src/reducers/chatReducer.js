@@ -21,6 +21,11 @@ const groupChats = {
   chats: [],
 };
 
+const theme = {
+  theme: "light",
+  main: "#1e88e5",
+};
+
 export const currentChatReducer = (state = currentChat, action) => {
   switch (action.type) {
     case "START_CHAT": {
@@ -98,7 +103,28 @@ const allChatsReducer = (state = allChats, action) => {
   }
 };
 
+const themeReducer = (state = theme, action) => {
+  switch (action.type) {
+    case "CHANGE_THEME": {
+      return {
+        ...state,
+        theme: action.payload,
+      };
+    }
+    case "CHANGE_MAIN": {
+      return {
+        ...state,
+        main: action.payload,
+      };
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
 export const chatReducer = combineReducers({
   currentChat: currentChatReducer,
   allChats: allChatsReducer,
+  theme: themeReducer,
 });

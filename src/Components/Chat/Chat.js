@@ -13,10 +13,11 @@ import {
   ChatHeader,
   ChatInput,
   ChatMessages,
-  Message,
+  ChatTextArea,
   MessageBox,
   SendIcon,
 } from "./ChatElements";
+import Message from "../../Message/Message";
 
 function Chat({ chatName }) {
   const currentChat = useSelector((state) => state.currentChat);
@@ -38,20 +39,24 @@ function Chat({ chatName }) {
     console.log(codigo);
     if (codigo === 13 && !e.shiftKey) {
       e.preventDefault();
+
       sendNewMessage();
+
       console.log("Se presiono el enter");
     }
   };
   const sendNewMessage = () => {
     console.log(JSON.parse(sessionStorage.getItem("currentChat")));
     console.log(currentChat);
-
-    dispatch(
-      sendMessage(currentChat, {
-        message: message,
-        user: currentUser.id,
-      })
-    );
+    if (!message.trim() == "") {
+      dispatch(
+        sendMessage(currentChat, {
+          message: message.trim(),
+          user: currentUser.id,
+        })
+      );
+    }
+    setMessage("");
     console.log(currentChat);
   };
   useEffect(() => {
@@ -86,14 +91,13 @@ function Chat({ chatName }) {
             <MessageBox
               key={index}
               user={message ? message.user : 0}
-              currentUser={currentChat.transmitter}
+              currentUser={currentUser.id}
             >
               <Message
                 user={message ? message.user : 0}
-                currentUser={currentChat.transmitter}
-              >
-                {message.message}
-              </Message>
+                currentUser={currentUser.id}
+                message={message.message}
+              />
             </MessageBox>
           ))}
         <div ref={messagesEndRef}></div>
@@ -102,6 +106,8 @@ function Chat({ chatName }) {
         <ChatInput
           onChange={(e) => handleChangeInput(e)}
           onKeyPress={handleKeyInput}
+          value={message}
+          placeholder="Escriba su mensaje aqui"
         />
         <SendIcon onClick={() => sendNewMessage()} />
       </ChatFooter>

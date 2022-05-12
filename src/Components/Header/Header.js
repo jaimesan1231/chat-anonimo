@@ -6,12 +6,17 @@ import {
   NickNameInput,
   Profile,
   SaveIcon,
+  Setting,
+  StyledModal,
   UserAvatar,
 } from "./HeaderElements";
+import SettingsIcon from "@mui/icons-material/Settings";
+import ModalSetting from "../Modal/ModalSetting";
 
 function Header() {
   const [nickname, setNickname] = useState("Anónimo");
   const [editMode, setEditMode] = useState(false);
+  const [modal, setModal] = useState(false);
   const handleChangeInput = (e) => {
     setNickname(e.target.value);
   };
@@ -34,8 +39,15 @@ function Header() {
     localStorage.setItem("users", JSON.stringify(newUserList));
     console.log(newUserList);
   };
+  const handleClose = () => {
+    setModal(false);
+  };
   return (
     <HeaderContainer>
+      <StyledModal
+        open={modal}
+        children={<ModalSetting handleClose={handleClose} />}
+      ></StyledModal>
       <Profile>
         <UserAvatar fontSize="large" />
         {editMode ? (
@@ -54,6 +66,9 @@ function Header() {
           </>
         )}
       </Profile>
+      <Setting>
+        <SettingsIcon onClick={() => setModal(true)} />
+      </Setting>
     </HeaderContainer>
   );
 }

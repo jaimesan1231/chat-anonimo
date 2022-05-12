@@ -11,7 +11,7 @@ import {
 } from "./FormAddChatElements";
 import Dropdown from "../Dropdowm/Dropdowm";
 
-function FormAddChat({ handleClose }) {
+function FormAddChat({ handleClose, addGroupChat }) {
   const [groupChat, setGroupChat] = useState({});
   const handleSubmit = (e) => {
     console.log(JSON.parse(localStorage.getItem("groupChats")));
@@ -30,13 +30,15 @@ function FormAddChat({ handleClose }) {
       JSON.stringify(groupChats ? groupChats : newGroupChat)
     );
     console.log(newGroupChat);
+    addGroupChat(newGroupChat);
+    handleClose();
   };
   const handleInputChange = (e) => {
-    const name = e.target.name;
+    const chatName = e.target.name;
     console.log(e.target.name);
     setGroupChat({
       ...groupChat,
-      [name]: e.target.value,
+      chatName: e.target.value,
     });
   };
   const handleCategory = (category) => {

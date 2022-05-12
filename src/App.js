@@ -10,12 +10,14 @@ import {
   updateChat,
 } from "./actions/chatActions";
 import { useEffect, useState } from "react";
-import { Users } from "./Components/Sidebar/SidebarElements";
+import { ThemeProvider } from "styled-components";
+import { darkTheme, lighTheme } from "./themes";
 
 function App() {
   const dispatch = useDispatch();
-
   const currentChat = useSelector((state) => state.currentChat);
+  const theme = useSelector((state) => state.theme);
+  console.log(theme);
   console.log(currentChat);
   const usuario = localStorage.getItem("users");
   console.log(JSON.parse(usuario));
@@ -109,10 +111,20 @@ function App() {
 
   return (
     <>
-      <GlobalStyle />
-      <Header />
-      <Sidebar userList={userList} />
-      {currentChat.receiver !== "" && <Chat chatName={currentChat.chatName} />}
+      <ThemeProvider
+        theme={
+          theme.theme == "light"
+            ? { ...lighTheme, main: theme.main }
+            : { ...darkTheme, main: theme.main }
+        }
+      >
+        <GlobalStyle />
+        <Header />
+        <Sidebar userList={userList} />
+        {currentChat.receiver !== "" && (
+          <Chat chatName={currentChat.chatName} />
+        )}
+      </ThemeProvider>
     </>
   );
 }

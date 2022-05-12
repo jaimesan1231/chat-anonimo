@@ -22,6 +22,17 @@ export const sendMessage = (currentChat, message) => {
       (chat) => chat.id == currentChat.id
     );
     console.log(groupChatSendMessage[0]);
+    if (groupChatSendMessage[0].messages) {
+      return {
+        type: "SEND_MESSAGE",
+        payload: [...groupChatSendMessage[0].messages, message],
+      };
+    } else {
+      return {
+        type: "SEND_MESSAGE",
+        payload: [message],
+      };
+    }
   }
 
   console.log(chats);
@@ -207,11 +218,25 @@ export const startNewGroupChat = (id, category, chatName, messages) => {
   if (!messages) {
     messages = [];
   }
+  console.log(chatName);
   return {
     type: "START_GROUP_CHAT",
     payloadID: id,
     payloadCategory: category,
     payloadChatName: chatName,
     payloadMessages: messages,
+  };
+};
+
+export const changeTheme = (theme) => {
+  return {
+    type: "CHANGE_THEME",
+    payload: theme,
+  };
+};
+export const changeMain = (main) => {
+  return {
+    type: "CHANGE_MAIN",
+    payload: main,
   };
 };
