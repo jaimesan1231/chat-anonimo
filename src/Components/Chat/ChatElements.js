@@ -17,20 +17,18 @@ export const ChatHeader = styled.div`
   display: flex;
   align-items: center;
   padding-left: 20px;
-`;
-export const ChatFooter = styled.div`
-  width: 100%;
-  height: 10%;
-  background: ${(props) => props.theme.black_12};
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
+  font-size: 30px;
+  font-weight: 500;
+  border-bottom: 1px solid
+    ${(props) => props.theme.black_20 || props.theme.gray};
 `;
 export const ChatMessages = styled.div`
   width: 100%;
   height: 80%;
   padding: 0px 10px;
   overflow-y: auto;
+  border-bottom: 1px solid
+    ${(props) => props.theme.black_20 || props.theme.gray};
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -38,17 +36,7 @@ export const ChatMessages = styled.div`
     background: #0084ff;
     border-radius: 4px;
   }
-`;
-export const ChatInput = styled(TextareaAutosize)`
-  width: 80%;
-  border: none;
-  font-family: "Roboto";
-  outline: none;
-  resize: none;
-  padding: 10px;
-  background: ${(props) => props.theme.black_20 || props.theme.gray};
-  border-radius: 10px;
-  color: ${(props) => props.theme.fontColor};
+  background: ${(props) => props.theme.black_12};
 `;
 
 export const MessageBox = styled.div`
@@ -58,7 +46,4 @@ export const MessageBox = styled.div`
   height: auto;
   white-space: normal;
   position: relative;
-`;
-export const SendIcon = styled(Send)`
-  color: ${(props) => props.theme.main};
 `;

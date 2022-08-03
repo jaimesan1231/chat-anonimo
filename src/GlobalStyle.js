@@ -12,5 +12,9 @@ export const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', sans-serif;
     display: flex;
     background-color:${(props) => props.theme.black_7} ;
+    
+  }
+  h3{
+    font-weight:500 ;
   }
 `;

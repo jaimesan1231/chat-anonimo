@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import ToggleDarkMode from "../ToggleDarkMode/ToggleDarkMode";
 import {
   Button,
@@ -7,10 +7,8 @@ import {
   ModalContainer,
   Title,
 } from "./ModalSettingElements";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useDispatch } from "react-redux";
-import { changeMain } from "../../actions/chatActions";
+import { changeMain } from "../../redux/slices/themes";
 
 function ModalSetting({ handleClose }) {
   const dispatch = useDispatch();

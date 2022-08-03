@@ -43,10 +43,13 @@ export const sendMessage = (currentChat, message) => {
       chat.transmitter == currentChat.transmitter &&
       chat.receiver == currentChat.receiver
   );
+  const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
   const activeChats = JSON.parse(sessionStorage.getItem("activeChats"));
   if (activeChats) {
     console.log("1");
-    const activechats = [...activeChats];
+    const activechats = activeChats.filter(
+      (chat) => chat.transmitter == currentUser.id
+    );
     if (
       activeChats.filter(
         (chat) =>
@@ -79,7 +82,6 @@ export const receiveMessage = (message) => {
 
   return {
     type: "RECEIVE_MESSAGE",
-
     payload: message,
   };
 };
@@ -100,11 +102,6 @@ export const updateChat = (chats, currentChat) => {
   const currentChats = JSON.parse(localStorage.getItem("chats"));
   console.log(currentChats);
 
-  const chatIds = currentChats.map((chat) => {
-    return { transmitterId: chat.transmitter, receiverId: chat.receiver };
-  });
-
-  console.log(chatIds);
   console.log(currentChat);
   console.log(chats);
   const chatFilter = chats.filter(

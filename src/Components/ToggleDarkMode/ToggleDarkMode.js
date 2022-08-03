@@ -3,7 +3,7 @@ import { Button, Notch, ToggleContainer } from "./ToggleDarkModeElements";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useDispatch, useSelector } from "react-redux";
-import { changeTheme } from "../../actions/chatActions";
+import { changeTheme } from "../../redux/slices/themes";
 
 function ToggleDarkMode() {
   const currentTheme = useSelector((state) => state.theme);

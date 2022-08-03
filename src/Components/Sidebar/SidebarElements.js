@@ -32,7 +32,6 @@ export const SidebarSwitch = styled.div`
   color: ${(props) => props.theme.main};
   box-shadow: 0px 1px 15px -3px rgba(0, 0, 0, 0.1);
   display: flex;
-  font-weight: 600;
   z-index: 0;
 `;
 
@@ -103,4 +102,5 @@ export const SwitchButton = styled.div`
   cursor: pointer;
   border-bottom: ${(props) =>
     props.active ? `2px solid ${props.theme.main}` : "none"};
+  font-weight: 500;
 `;
