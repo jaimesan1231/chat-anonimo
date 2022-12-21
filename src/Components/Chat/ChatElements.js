@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import { Send } from "@mui/icons-material";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
 
 export const ChatContainer = styled.div`
   width: calc(100vw - 250px);
@@ -42,7 +40,7 @@ export const ChatMessages = styled.div`
 export const MessageBox = styled.div`
   display: flex;
   justify-content: ${(props) =>
-    props.user == props.currentUser ? "flex-end" : "flex-start"};
+    props.user === props.currentUser ? "flex-end" : "flex-start"};
   height: auto;
   white-space: normal;
   position: relative;

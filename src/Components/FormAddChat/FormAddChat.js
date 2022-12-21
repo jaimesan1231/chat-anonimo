@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { CloseTwoTone } from "@mui/icons-material";
 import {
   ButtonSection,
   FormButton,
@@ -14,7 +13,6 @@ import Dropdown from "../Dropdowm/Dropdowm";
 function FormAddChat({ handleClose, addGroupChat }) {
   const [groupChat, setGroupChat] = useState({});
   const handleSubmit = (e) => {
-    console.log(JSON.parse(localStorage.getItem("groupChats")));
     const groupChats =
       JSON.parse(localStorage.getItem("groupChats")) !== null
         ? JSON.parse(localStorage.getItem("groupChats"))
@@ -29,13 +27,10 @@ function FormAddChat({ handleClose, addGroupChat }) {
       "groupChats",
       JSON.stringify(groupChats ? groupChats : newGroupChat)
     );
-    console.log(newGroupChat);
     addGroupChat(newGroupChat);
     handleClose();
   };
   const handleInputChange = (e) => {
-    const chatName = e.target.name;
-    console.log(e.target.name);
     setGroupChat({
       ...groupChat,
       chatName: e.target.value,

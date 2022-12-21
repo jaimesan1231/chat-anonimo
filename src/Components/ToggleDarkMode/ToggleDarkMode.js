@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, Notch, ToggleContainer } from "./ToggleDarkModeElements";
+import React from "react";
+import { Notch, ToggleContainer } from "./ToggleDarkModeElements";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,15 +7,11 @@ import { changeTheme } from "../../redux/slices/themes";
 
 function ToggleDarkMode() {
   const currentTheme = useSelector((state) => state.theme);
-  const [toggleTheme, setToggleTheme] = useState("light");
   const dispatch = useDispatch();
   const handleToggle = () => {
-    const theme = currentTheme.theme == "light" ? "dark" : "light";
-    setToggleTheme(theme);
-    console.log(currentTheme.theme);
+    const theme = currentTheme.theme === "light" ? "dark" : "light";
     dispatch(changeTheme(theme));
   };
-  console.log(currentTheme.theme);
   return (
     <ToggleContainer
       currentTheme={currentTheme.theme}

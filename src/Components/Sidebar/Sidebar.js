@@ -28,15 +28,10 @@ function Sidebar({ userList }) {
   const groupChatList = JSON.parse(localStorage.getItem("groupChatList"));
   const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
   const activeChats = JSON.parse(sessionStorage.getItem("activeChats"));
-
-  console.log(userList);
   useEffect(() => {
     if (userList != null && currentUser != null) {
-      console.log(userList);
       const otherUsers = userList.filter((user) => user.id !== currentUser.id);
-      console.log(otherUsers);
       setChatList(otherUsers);
-      console.log(chatList);
     }
   }, [userList]);
 
@@ -66,17 +61,20 @@ function Sidebar({ userList }) {
         }
       ></StyledModal>
       <SidebarSwitch>
-        <SwitchButton onClick={setUserSidebar} active={sidebarState == "users"}>
+        <SwitchButton
+          onClick={setUserSidebar}
+          active={sidebarState === "users"}
+        >
           Usuarios
         </SwitchButton>
         <SwitchButton
           onClick={setGroupSidebar}
-          active={sidebarState == "groups"}
+          active={sidebarState === "groups"}
         >
           Grupos
         </SwitchButton>
       </SidebarSwitch>
-      {sidebarState == "users" ? (
+      {sidebarState === "users" ? (
         <>
           <ActiveChats>
             <h3>Chats activos</h3>
@@ -106,7 +104,7 @@ function Sidebar({ userList }) {
               {users != null &&
                 chatList.map((user) => (
                   <ChatListItem
-                    active={user.id == currentChat.receiver ? true : false}
+                    active={user.id === currentChat.receiver ? true : false}
                     key={user.id}
                     onClick={() =>
                       startChat(currentChat, currentUser.id, user.id, user.name)

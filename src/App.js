@@ -19,10 +19,10 @@ function App() {
     window.addEventListener(
       "storage",
       (e) => {
-        if (e.key == "users") {
+        if (e.key === "users") {
           updateUserList(JSON.parse(localStorage.getItem("users")));
         }
-        if (e.key == "chats") {
+        if (e.key === "chats") {
           console.log("se cambioaron chats");
           updateCurrentReceiverChatMessages();
         }
@@ -35,7 +35,7 @@ function App() {
     <>
       <ThemeProvider
         theme={
-          theme.theme == "light"
+          theme.theme === "light"
             ? { ...lighTheme, main: theme.main }
             : { ...darkTheme, main: theme.main }
         }

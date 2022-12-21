@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 
 export const MessageContainer = styled.div`
   background: ${(props) =>
-    props.user == props.currentUser ? props.theme.main : "#3E4042"};
+    props.user === props.currentUser ? props.theme.main : "#3E4042"};
   color: white;
   border-radius: 8px;
   padding: 10px;
@@ -15,7 +15,7 @@ export const MessageContainer = styled.div`
     color: ${(props) => props.theme.fontColor};
     font-size: 0px;
     position: absolute;
-    left: ${(props) => (props.user == props.currentUser ? "0px" : "100%")};
+    left: ${(props) => (props.user === props.currentUser ? "0px" : "100%")};
     transition: all 0.3s ease;
     z-index: -1;
     cursor: pointer;
@@ -26,7 +26,7 @@ export const MessageContainer = styled.div`
           &:hover {
             svg {
               transform: ${(props) =>
-                props.user == props.currentUser ? "translateX(-100%)" : ""};
+                props.user === props.currentUser ? "translateX(-100%)" : ""};
               font-size: 20px;
             }
           }

@@ -26,18 +26,14 @@ function Header() {
     currentUser.name = nickname;
     sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
     const userList = JSON.parse(localStorage.getItem("users"));
-    console.log(currentUser);
-    console.log(userList);
     const newUserList = userList.map((user) => {
-      if (currentUser.id == user.id) {
-        console.log(currentUser);
+      if (currentUser.id === user.id) {
         return currentUser;
       } else {
         return user;
       }
     });
     localStorage.setItem("users", JSON.stringify(newUserList));
-    console.log(newUserList);
   };
   const handleClose = () => {
     setModal(false);

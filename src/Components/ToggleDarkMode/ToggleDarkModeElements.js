@@ -4,7 +4,7 @@ export const ToggleContainer = styled.div`
   width: 80px;
   border-radius: 50px;
   background-color: ${(props) =>
-    props.currentTheme == "light" ? props.theme.main : props.theme.black_7};
+    props.currentTheme === "light" ? props.theme.main : props.theme.black_7};
   display: flex;
   align-items: center;
   position: relative;
@@ -20,8 +20,8 @@ export const Notch = styled.div`
   width: 30px;
   border-radius: 50%;
   background: ${(props) =>
-    props.currentTheme == "light" ? "white" : props.theme.black_15};
+    props.currentTheme === "light" ? "white" : props.theme.black_15};
   position: absolute;
-  left: ${(props) => (props.currentTheme == "light" ? "5px" : "45px")};
+  left: ${(props) => (props.currentTheme === "light" ? "5px" : "45px")};
   transition: all 0.3s ease;
 `;
