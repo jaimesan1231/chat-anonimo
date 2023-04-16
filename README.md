@@ -16,6 +16,7 @@ Esta pagina web representa un chat de manera local entre pestañas de un mismo n
 
 - React
 - Styled Components
+- Redux
 
 ## Imagenes del proyecto
 
@@ -32,4 +33,4 @@ Clonar este repositorio. Necesitaras node.js y git instalado globalmente y segui
 
 ## Demo
 
-Puedes ver una demo del proyecto aqui
+Puedes ver una demo del proyecto [aqui](https://chat-anonimo-rust.vercel.app/)
