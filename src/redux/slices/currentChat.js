@@ -15,7 +15,6 @@ export const currentChatSlice = createSlice({
     startNewChat: (state, action) => {
       if (!action.payload.messages) {
         state.messages = [];
-        console.log("no hay mensajes");
       } else {
         state.messages = action.payload.messages;
       }

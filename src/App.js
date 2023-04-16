@@ -23,7 +23,6 @@ function App() {
           updateUserList(JSON.parse(localStorage.getItem("users")));
         }
         if (e.key === "chats") {
-          console.log("se cambioaron chats");
           updateCurrentReceiverChatMessages();
         }
       },

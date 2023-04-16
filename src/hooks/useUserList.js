@@ -8,7 +8,6 @@ export const useUserList = () => {
   };
   const createUserList = () => {
     if (users != null) {
-      console.log("1");
       const newUserList = [
         ...JSON.parse(users),
         { id: JSON.parse(users).length + 1, name: "Anonimo" },
@@ -22,7 +21,6 @@ export const useUserList = () => {
       sessionStorage.setItem("activeChats", JSON.stringify([]));
     } else {
       const newUser = [{ id: 1, name: "Anonimo" }];
-      console.log("2");
       localStorage.setItem("users", JSON.stringify(newUser));
       sessionStorage.setItem("currentUser", JSON.stringify(...newUser));
       sessionStorage.setItem("activeChats", JSON.stringify([]));
